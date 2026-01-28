@@ -2,6 +2,9 @@
 
 In this project im implementing how the rays from a light source behave when they hit an object.
 
+<img width="1366" height="768" alt="screenshot-2026-01-28_18-16-05" src="https://github.com/user-attachments/assets/05e7d4cf-54f1-410d-86fe-10d620cd757f" />
+
+
 ## Project Overview
 
 The application is built in Rust and uses the `pixels` crate for rendering and `winit` for windowing and event handling. The core logic is split into two main files: `src/main.rs` for the application entry point and window management, and `src/draw.rs` for the rendering and ray tracing logic.
