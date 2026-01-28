@@ -54,7 +54,7 @@ pub fn draw(pixels: &mut Pixels<'static>, cursor_pos: (f64, f64), width: u32, he
         Circle::new(
             (width / 3) as i32,
             (height / 3) as i32,
-            50,
+            100,
             [255, 255, 255, 255],
         ),
         Circle::new(0, 0, 40, [255, 255, 200, 255])
@@ -260,3 +260,4 @@ fn draw_on_point(x: u32, y: u32, color: [u8; 4], frame: &mut [u8], width: u32) {
         frame[i + 3] = 255;
     }
 }
+
