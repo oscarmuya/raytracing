@@ -6,7 +6,7 @@ use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{Window, WindowId};
 mod draw;
 
-const WIDTH: u32 = 800;
+const WIDTH: u32 = 600;
 const HEIGHT: u32 = 600;
 
 #[derive(Default)]
@@ -66,4 +66,3 @@ fn main() {
     let mut app = App::default();
     event_loop.run_app(&mut app).unwrap();
 }
-
