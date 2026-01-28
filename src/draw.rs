@@ -52,8 +52,8 @@ pub fn draw(pixels: &mut Pixels<'static>, cursor_pos: (f64, f64), width: u32, he
     // Define objects
     let objects = vec![
         Circle::new(
-            (width / 3) as i32,
-            (height / 3) as i32,
+            (width / 2) as i32,
+            (height / 2) as i32,
             100,
             [255, 255, 255, 255],
         ),
@@ -260,4 +260,3 @@ fn draw_on_point(x: u32, y: u32, color: [u8; 4], frame: &mut [u8], width: u32) {
         frame[i + 3] = 255;
     }
 }
-

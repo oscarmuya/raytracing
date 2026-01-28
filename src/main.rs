@@ -86,12 +86,7 @@ impl ApplicationHandler for App {
                     if let Err(err) = pixels.render() {
                         eprintln!("pixels.render() failed: {err}");
                         event_loop.exit();
-                        return;
                     }
-                }
-
-                if let Some(window) = &self.window {
-                    window.request_redraw();
                 }
             }
             _ => {}
