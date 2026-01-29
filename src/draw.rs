@@ -95,29 +95,40 @@ fn find_ray_intersection(
     cursor_pos: &(f64, f64),
     window: &(u32, u32),
 ) -> Option<(i32, i32)> {
-    // Sample points along the ray
-    let dx = x1 - x0;
-    let dy = y1 - y0;
-    let distance = ((dx * dx + dy * dy) as f32).sqrt();
-    let steps = distance.ceil() as i32;
+    let dx = (x1 - x0).abs();
+    let dy = (y1 - y0).abs();
+    let sx = if x0 < x1 { 1 } else { -1 };
+    let sy = if y0 < y1 { 1 } else { -1 };
+    let mut err = dx - dy;
 
-    if steps == 0 {
-        return None;
-    }
+    let mut x = x0;
+    let mut y = y0;
+    let max_steps = 2000;
 
-    for step in 1..steps {
-        let t = step as f32 / steps as f32;
-        let px = (x0 as f32 + dx as f32 * t).round() as i32;
-        let py = (y0 as f32 + dy as f32 * t).round() as i32;
-
-        // Check collision with all non-emitting objects
+    for _ in 0..max_steps {
+        // Check collision with non-emitting objects
         for obj in objects.iter() {
             if !obj.emits_light {
                 let (cx, cy) = obj.get_center(cursor_pos, window);
-                if point_in_circle(px, py, cx, cy, obj.radius) {
-                    return Some((px, py));
+                let dist_sq = (x - cx).pow(2) + (y - cy).pow(2);
+                if dist_sq <= (obj.radius * obj.radius) {
+                    return Some((x, y));
                 }
             }
+        }
+
+        if x == x1 && y == y1 {
+            break;
+        }
+
+        let e2 = 2 * err;
+        if e2 > -dy {
+            err -= dy;
+            x += sx;
+        }
+        if e2 < dx {
+            err += dx;
+            y += sy;
         }
     }
 
@@ -133,26 +144,22 @@ fn draw_rays_with_shadows(
     window: &(u32, u32),
     cursor_pos: &(f64, f64),
 ) {
-    let ray_count = 360;
-    let ray_color = [255, 255, 0, 100]; // Semi-transparent yellow
+    let ray_count = 120;
+    let ray_color = [255, 255, 0, 100];
 
     for i in 0..ray_count {
-        let theta = (i as f32) * std::f32::consts::PI / 180.0;
+        let theta = (i as f32) * (std::f32::consts::PI * 2.0) / ray_count as f32;
         let ray_length = (window.0.max(window.1)) as f32;
         let end_x = cx as f32 + ray_length * theta.cos();
         let end_y = cy as f32 + ray_length * theta.sin();
-
         let ex = end_x.round() as i32;
         let ey = end_y.round() as i32;
 
-        // Check if ray hits a blocking object
         if let Some((hit_x, hit_y)) =
             find_ray_intersection(cx, cy, ex, ey, objects, cursor_pos, window)
         {
-            // Draw ray only up to the intersection point
             draw_line(cx, cy, hit_x, hit_y, ray_color, frame, window);
         } else {
-            // Draw full ray if no intersection
             draw_line(cx, cy, ex, ey, ray_color, frame, window);
         }
     }
